@@ -241,6 +241,18 @@ class Cleaner
       end
     end
   end
+
+  def unindex
+    take_folders.each do |f|
+      if File.basename(f) =~ /^\d{2}-/
+        from = f
+        to = File.join(organised_folder, File.basename(f).gsub(/^\d{2}-/, ''))
+        cmd = "mv #{from} #{to}"
+        logger.info "Exec: #{cmd}"
+        `#{cmd}`
+      end
+    end
+  end
 end
 
 class Checker
@@ -313,6 +325,8 @@ class Runner
       Organiser.new(:logger => logger).execute
     when 'clean'
       Cleaner.new(:logger => logger).clean
+    when 'unindex'
+      Cleaner.new(:logger => logger).unindex
     else
       puts "USAGE: #{File.basename(__FILE__)} volume|import|check|amounts|sizes|organise|clean"
     end
