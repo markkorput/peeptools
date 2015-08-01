@@ -14,7 +14,7 @@ module Peep
     end
 
     def project_volume
-      config[:project_volume] || '/Volumes/PEEPDISK1'
+      config[:project_volume] || (File.directory?('/Volumes/PEEPDISK1') ? '/Volumes/PEEPDISK1' : '/Volumes/PEEPDISK2')
     end
 
     def project_folder
