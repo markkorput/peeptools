@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'FileUtils'
 require 'logger'
-require './peep_helper'
+require '../lib/peep_helper'
 
 class Runner
   attr_reader :options
