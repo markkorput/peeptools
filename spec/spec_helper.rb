@@ -18,5 +18,4 @@ def spec_logger
 	end
 end
 
-CURRENT_DIR=File.dirname(__FILE__)
-$: << File.expand_path(CURRENT_DIR + "/../lib")
+$: << File.expand_path('../lib', File.dirname(__FILE__))
