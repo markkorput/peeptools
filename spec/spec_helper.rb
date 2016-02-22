@@ -19,3 +19,13 @@ def spec_logger
 end
 
 $: << File.expand_path('../lib', File.dirname(__FILE__))
+
+# monkey patch some stubbing logic
+def stubstub(subject)
+    if subject.is_a?(Peep::GoproFolder)
+        expect(Dir).to receive(:glob).with('/Volumes/*').and_return(["/Volumes/#{subject.name}"])
+        expect(File).to receive(:directory?).with("/Volumes/#{subject.name}").and_return(true)
+        expect(File).to receive(:exist?).with("/Volumes/#{subject.name}/DCIM/100GOPRO").and_return(true)
+        expect(File).to receive(:exist?).with("/Volumes/#{subject.name}/MISC").and_return(true) # this just surpresses the logger warning of a missing MISC folder
+    end
+end

@@ -60,6 +60,17 @@ describe Peep::Folder do
         end
     end
     
+    describe '.folders' do
+        it 'gives all the child folders' do
+            expect(folder.folders).to eq []
+            expect(Dir).to receive(:glob).with('/Users/johndoe/Downloads/*').and_return(['/Users/johndoe/Downloads/a', '/Users/johndoe/Downloads/bb', '/Users/johndoe/Downloads/ccc'])
+            expect(File).to receive(:directory?).with('/Users/johndoe/Downloads/a').and_return(true)
+            expect(File).to receive(:directory?).with('/Users/johndoe/Downloads/bb').and_return(true)
+            expect(File).to receive(:directory?).with('/Users/johndoe/Downloads/ccc').and_return(true)
+            expect(folder.folders.map(&:name)).to eq ['a', 'bb', 'ccc']
+        end
+    end
+    
     describe '[] operator' do
         it 'gives a specified child folder object' do
             expect(folder[:documents].class).to eq Peep::Folder

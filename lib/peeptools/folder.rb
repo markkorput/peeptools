@@ -33,5 +33,13 @@ module Peep
         end
 
         alias :[] :folder
+        
+        def children_paths
+            Dir.glob(File.join(self.full_path, '*'))
+        end
+
+        def folders
+            children_paths.select{|p| File.directory?(p)}.map{|p| self.class.new(p)}
+        end
     end
 end
