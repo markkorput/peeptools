@@ -8,5 +8,10 @@ module Peep
             logger.warn "No MISC folder found, but considering #{self.full_path} a valid GoPro volume anyway" if !folder('MISC').exists?
             return true
         end
+        
+        def number
+            (self.name.match(/\d+$/) || [])[0] ||
+            (self.name.match(/\d+/) || [])[0]
+        end
     end
 end

@@ -1,52 +1,22 @@
 #!/usr/bin/env ruby
-require 'FileUtils'
+$: << File.expand_path('../lib', File.dirname(__FILE__))
+
+# require 'FileUtils'
 require 'logger'
+require 'peeptools/volume_finder'
 
-CONFIG = {
-  :volume_matcher => /peeppro/i,
-  # :volume_matcher => /peep/i,
-  :subfolder => File.join('DCIM','100GOPRO'),
-  # :subfolder => 'Peepshow-Generale/Data01/cam1', 
-  :file_pattern => '*.MP4',
-  :number_name_separator => '--',
-  # :import_folder => './IMPORT',
-  # :organised_folder => './ORGANISE',
-  :take_names => [
-  ]
-}
-
-class VolumeFinder
-  attr_reader :options
-
-  def initialize opts = {}
-    @options = opts
-  end
-
-  def logger
-    @logger ||= options[:logger] || Logger.new(STDOUT).tap do |l|
-      l.level = Logger::DEBUG
-    end
-  end
-
-  def matcher
-    options[:volume_matcher] || CONFIG[:volume_matcher]
-  end
-
-  def folders
-    @folders ||= Dir.glob('/Volumes/*')
-  end
-
-  def matching_folders
-    folders.select{|f| f =~ matcher}
-  end
-
-  def folder
-    return matching_folders.first if matching_folders.length == 1
-
-    raise 'Volume not found' if matching_folders.length == 0
-    raise "More than one matching volume found: #{matching_folders.inspect}"
-  end
-end
+# CONFIG = {
+#   :volume_matcher => /peeppro/i,
+#   # :volume_matcher => /peep/i,
+#   :subfolder => File.join('DCIM','100GOPRO'),
+#   # :subfolder => 'Peepshow-Generale/Data01/cam1', 
+#   :file_pattern => '*.MP4',
+#   :number_name_separator => '--',
+#   # :import_folder => './IMPORT',
+#   # :organised_folder => './ORGANISE',
+#   :take_names => [
+#   ]
+# }
 
 class Importer
   attr_reader :options
@@ -309,7 +279,18 @@ class Runner
   def run
     case argv[0]
     when 'volume'
-      logger.info "Found volume: #{VolumeFinder.new(:logger => logger).folder}"
+      folder = Peep::VolumeFinder.new(:logger => logger).folder
+      if folder
+        logger.info "Found GoPro folder: #{folder.full_path}"
+      else
+        logger.info "No GoPro folders found"
+      end
+
+    when 'volumes'
+      folders = Peep::VolumeFinder.new(:logger => logger).folders
+      logger.info "Number of GoPro volumes found: #{folders.length}"
+      folders.each{|f| logger.info " - #{f.full_path}"}
+
     when 'import'
       volume = VolumeFinder.new.folder
       logger.info "Found volume: #{volume}"
