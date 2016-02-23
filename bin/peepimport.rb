@@ -107,7 +107,7 @@ class Cleaner
   end
 
   def organised_folder
-    @organise_folder ||= File.expand_path(options[:folder] || options[:folder] || File.join(File.dirname(__FILE__), 'ORGANISED'))
+    @organise_folder ||= File.expand_path(options[:folder] || options[:folder] || File.join(Dir.pwd, 'ORGANISED'))
   end
 
   def take_folders
@@ -159,7 +159,7 @@ class Checker
   end
 
   def import_folder
-    File.expand_path(options[:folder] || CONFIG[:import_folder] || File.join(File.dirname(__FILE__), '_IMPORT'))
+    File.expand_path(options[:folder] || CONFIG[:import_folder] || File.join(Dir.pwd, '_IMPORT'))
   end
 
   def cam_folders
@@ -238,7 +238,7 @@ class Runner
     when 'unindex'
       Cleaner.new(:logger => logger).unindex
     else
-      puts "USAGE: #{File.basename(__FILE__)} volume|import|check|amounts|sizes|organise|clean"
+      puts "USAGE: #{File.basename(__FILE__)} volume|import|check|amounts|sizes|organise|clean|unindex"
     end
   end
 end
