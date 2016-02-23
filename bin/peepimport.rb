@@ -1,23 +1,23 @@
 #!/usr/bin/env ruby
 $: << File.expand_path('../lib', File.dirname(__FILE__))
 
-# require 'FileUtils'
+require 'FileUtils'
 require 'logger'
 require 'peeptools/volume_finder'
 require 'peeptools/importer'
 
-# CONFIG = {
-#   :volume_matcher => /peeppro/i,
-#   # :volume_matcher => /peep/i,
-#   :subfolder => File.join('DCIM','100GOPRO'),
-#   # :subfolder => 'Peepshow-Generale/Data01/cam1', 
-#   :file_pattern => '*.MP4',
-#   :number_name_separator => '--',
-#   # :import_folder => './IMPORT',
-#   # :organised_folder => './ORGANISE',
-#   :take_names => [
-#   ]
-# }
+CONFIG = {
+  :volume_matcher => /peeppro/i,
+  # :volume_matcher => /peep/i,
+  :subfolder => File.join('DCIM','100GOPRO'),
+  # :subfolder => 'Peepshow-Generale/Data01/cam1', 
+  :file_pattern => '*.MP4',
+  :number_name_separator => '--',
+  # :import_folder => './_IMPORT',
+  # :organised_folder => './ORGANISE',
+  # :take_names => [
+  # ]
+}
 
 
 class Organiser
@@ -38,11 +38,11 @@ class Organiser
   end
 
   def import_folder
-    @import_folder ||= File.expand_path(options[:folder] || options[:folder] || File.join(File.dirname(__FILE__), 'IMPORT'))
+    @import_folder ||= File.expand_path(options[:folder] || options[:folder] || File.join(Dir.pwd, 'IMPORT'))
   end
 
   def organised_folder
-    @organise_folder ||= File.expand_path(options[:folder] || options[:folder] || File.join(File.dirname(__FILE__), 'ORGANISED'))
+    @organise_folder ||= File.expand_path(options[:folder] || options[:folder] || File.join(Dir.pwd, 'ORGANISED'))
   end
 
   def take_folders
@@ -63,11 +63,11 @@ class Organiser
     end
 
     logger.info "Creating folder for organised takes..."
-    FileUtils.mkdir(organised_folder)
+    Dir.mkdir(organised_folder)
 
     take_names.each do |name|
       logger.info "Creating take folder #{name}"
-      FileUtils.mkdir(File.join(organised_folder, name))
+      Dir.mkdir(File.join(organised_folder, name))
     end
 
     return take_folders
@@ -87,7 +87,7 @@ class Organiser
         dest_name = "cam#{cam_no_part}#{CONFIG[:number_name_separator]}#{File.basename(cam_file)}"
         dest_path = File.join(take_folder, dest_name)
         logger.info "Taking file from cam folder #{File.basename(cam_folder)} as #{dest_name}"
-        FileUtils.mv(cam_file, dest_path)
+        Dir.mv(cam_file, dest_path)
       end
     end
   end
@@ -159,7 +159,7 @@ class Checker
   end
 
   def import_folder
-    File.expand_path(options[:folder] || CONFIG[:import_folder] || File.join(File.dirname(__FILE__), 'IMPORT'))
+    File.expand_path(options[:folder] || CONFIG[:import_folder] || File.join(File.dirname(__FILE__), '_IMPORT'))
   end
 
   def cam_folders
