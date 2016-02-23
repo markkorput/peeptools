@@ -39,4 +39,18 @@ describe Peep::GoproFolder do
             expect(Peep::GoproFolder.new('/Volumes/GP12_34RO').number).to eq '12'
         end
     end
+    
+    describe "video_files" do
+        it "gives all mp4 files in the DCIM/100GOPRO folder as Peep::File objects" do
+            expect(Dir).to receive(:glob).with('/Volumes/GOPRO/DCIM/100GOPRO/*.MP4').and_return([
+                '/Volumes/GOPRO/DCIM/100GOPRO/aa1.MP4',
+                '/Volumes/GOPRO/DCIM/100GOPRO/bb2.MP4',
+                '/Volumes/GOPRO/DCIM/100GOPRO/cc3.MP4'
+            ])
+            video_files = gopro_folder.video_files
+            
+            expect(video_files.map(&:class)).to eq [Peep::File]*3
+            expect(video_files.map(&:name)).to eq ['aa1.MP4', 'bb2.MP4', 'cc3.MP4']
+        end
+    end        
 end

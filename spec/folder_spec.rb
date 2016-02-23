@@ -94,4 +94,11 @@ describe Peep::Folder do
             expect(Peep::Folder.new.logger.class).to eq Logger
         end
     end
+    
+    describe '.parent' do
+        it 'gives the parent folder' do
+            expect(Peep::Folder.new('/some/path/to/a/folder').parent.full_path).to eq '/some/path/to/a'
+            expect(Peep::Folder.new('/some/path/to/a/folder').parent.parent.parent.full_path).to eq '/some/path'
+        end
+    end
 end
