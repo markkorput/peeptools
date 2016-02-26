@@ -38,7 +38,7 @@ class Organiser
   end
 
   def import_folder
-    @import_folder ||= File.expand_path(options[:folder] || options[:folder] || File.join(Dir.pwd, 'IMPORT'))
+    @import_folder ||= File.expand_path(options[:folder] || options[:folder] || File.join(Dir.pwd, '_IMPORT'))
   end
 
   def organised_folder
@@ -87,7 +87,7 @@ class Organiser
         dest_name = "cam#{cam_no_part}#{CONFIG[:number_name_separator]}#{File.basename(cam_file)}"
         dest_path = File.join(take_folder, dest_name)
         logger.info "Taking file from cam folder #{File.basename(cam_folder)} as #{dest_name}"
-        Dir.mv(cam_file, dest_path)
+        File.rename(cam_file, dest_path)
       end
     end
   end
