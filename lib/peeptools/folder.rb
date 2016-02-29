@@ -19,6 +19,12 @@ module Peep
             children_paths.select{|p| ::File.directory?(p)}.map{|p| self.class.new(p)}
         end
 
+        def files _opts = {}
+            files = children_paths.select{|p| ::File.file?(p)}.map{|p| File.new(p)}
+            files = files.select{|f| f.extension == ".#{_opts[:ext]}"} if _opts[:ext]
+            return files
+        end
+
         def create opts = {}
             return if self.exists?
 

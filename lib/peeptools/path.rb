@@ -27,5 +27,9 @@ module Peep
         def exists?
             ::File.exist?(self.full_path)
         end
+
+        def extension
+            ::File.extname(self.full_path)
+        end
     end
 end

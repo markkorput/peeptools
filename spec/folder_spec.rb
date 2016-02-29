@@ -71,6 +71,25 @@ describe Peep::Folder do
         end
     end
     
+    describe '.files' do
+        let(:path){
+            File.expand_path('fixtures/Volumes/GOPRO3/DCIM/100GOPRO', File.dirname(__FILE__))
+        }
+    
+        let(:folder){
+            Peep::Folder.new(path)
+        }
+
+        it 'gives all files in the folder' do
+            expect(folder.files.map(&:name).sort).to eq ['vid1.MP4', 'vid2.MP4', 'vid3.MP4']
+        end
+        
+        it 'gives all files in the folder with a specified extension' do
+            expect(folder.files(:ext => 'MP4').map(&:name).sort).to eq ['vid1.MP4', 'vid2.MP4', 'vid3.MP4']
+            expect(folder.files(:ext => 'MOV').map(&:name)).to eq []
+        end
+    end
+
     describe '[] operator' do
         it 'gives a specified child folder object' do
             expect(folder[:documents].class).to eq Peep::Folder

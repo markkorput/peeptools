@@ -22,7 +22,7 @@ module Peep
         alias :source_folder :folder
 
         def import_folder
-            Folder.new(@cwd)['_IMPORT']
+            options[:import_folder] ? Folder.new(options[:import_folder]) : Folder.new(@cwd)['_IMPORT']
         end
 
         def target_folder
@@ -39,6 +39,10 @@ module Peep
             logger.info "Running command:\n#{command}"
             exec(command)
             logger.info "rsync done."
+        end
+        
+        def imported_folders
+            import_folder.folders
         end
     end
 end

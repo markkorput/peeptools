@@ -227,8 +227,14 @@ class Runner
 
     when 'check'
       Checker.new(:logger => logger).check_hashes
+
     when 'amounts'
-      Checker.new(:logger => logger).check_amounts
+
+      # Checker.new(:logger => logger).check_amounts
+      Peep::Importer.new(:logger => logger).imported_folders.each do |f|
+        logger.info "#{f.name}: #{f.files(:ext => 'MP4').length} mp4 file(s)"
+      end
+
     when 'sizes'
       Checker.new(:logger => logger).check_size
     when 'organise'
