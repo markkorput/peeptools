@@ -32,6 +32,7 @@ describe Peep::GoproFolder do
     describe ".number" do
         it "gives the trailing digits from the GoPro volume folder name" do
             expect(Peep::GoproFolder.new('/Volumes/GPRO001').number).to eq '001'
+            expect(Peep::GoproFolder.new('/Volumes/GPRO2-3').number).to eq '3'
         end
         
         it "gives the first group of digits in the folder name if the folder name doesn't end with digits" do

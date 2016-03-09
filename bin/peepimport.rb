@@ -82,7 +82,7 @@ class Organiser
       logger.info "Populating take folder: #{take_folder}"
       logger.info "Cam fs: #{cam_folders.inspect}"
       cam_folders.each_with_index do |cam_folder, idx|
-        cam_no_part = (File.basename(cam_folder).match(/(\d+)/) || [])[1] || "IDX#{idx}"
+        cam_no_part = (File.basename(cam_folder).match(/(\d+)$/) || [])[1] || (File.basename(cam_folder).match(/(\d+)/) || [])[1] || "IDX#{idx}"
         cam_file = Dir.glob(File.join(cam_folder, '*')).sort{|a,b| a.downcase <=> b.downcase}.first
         dest_name = "cam#{cam_no_part}#{CONFIG[:number_name_separator]}#{File.basename(cam_file)}"
         dest_path = File.join(take_folder, dest_name)
