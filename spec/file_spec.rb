@@ -16,4 +16,8 @@ describe Peep::File do
             expect(file.extension).to eq '.MP4'
         end
     end
+
+    describe '.cd' do
+        it 'moves the file to a specfied folder'
+    end
 end

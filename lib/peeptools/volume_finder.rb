@@ -6,7 +6,11 @@ module Peep
         attr_reader :options
 
         def initialize opts = {}
-            
+            @options = opts
+        end
+
+        def volumes_folder
+            Folder.new(options[:volumes_folder] || '/Volumes')
         end
 
         def folder
@@ -14,11 +18,10 @@ module Peep
         end
 
         def folders
-            a= Folder.new('/Volumes').folders.map do |folder|
+            volumes_folder.folders.map do |folder|
                 f = Peep::GoproFolder.new(folder.full_path)
                 f.is_gopro? ? f : nil
             end.compact
-            # byebug
         end
     end
 end

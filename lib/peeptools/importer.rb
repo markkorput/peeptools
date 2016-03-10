@@ -16,7 +16,7 @@ module Peep
         end
 
         def folder
-            options[:folder].is_a?(String) ? GoproFolder.new(options[:folder]) : options[:folder] || GoproFolder.new
+            options[:folder].is_a?(String) ? GoproFolder.new(options[:folder]) : options[:folder]
         end
 
         alias :source_folder :folder
@@ -40,7 +40,7 @@ module Peep
             exec(command)
             logger.info "rsync done."
         end
-        
+
         def imported_folders
             import_folder.folders
         end
