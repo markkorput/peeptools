@@ -1,7 +1,7 @@
 module Peep
     module Path
         attr_reader :options
-        
+
         def initialize _opts = {}
             @options = _opts.is_a?(Hash) ? _opts : {:path => _opts}
         end
@@ -13,7 +13,7 @@ module Peep
         end
 
         def path
-            options[:path] || Dir.pwd
+            @path || options[:path] || Dir.pwd
         end
 
         def full_path

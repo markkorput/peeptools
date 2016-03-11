@@ -3,9 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 require 'peeptools/volume_finder'
 
 describe Peep::VolumeFinder do
-    let(:volume_finder){
-        Peep::VolumeFinder.new
-    }
+    let(:volume_finder){ Peep::VolumeFinder.new }
 
     describe '.volumes_folder' do
         it 'gives a Folder instance' do
@@ -38,7 +36,7 @@ describe Peep::VolumeFinder do
         end
 
         it 'only returns recognised gopro volume folders inside the configured volumes_folder' do
-            volume_finder = Peep::VolumeFinder.new(:volumes_folder => File.expand_path('fixtures/Volumes'), File.dirname(__FILE__)))
+            volume_finder = Peep::VolumeFinder.new(:volumes_folder => File.expand_path('fixtures/Volumes', File.dirname(__FILE__)))
             expect(volume_finder.folders.map(&:name)).to eq ['GOPRO3']
         end
 
