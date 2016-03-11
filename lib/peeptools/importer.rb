@@ -37,7 +37,7 @@ module Peep
             logger.info "Found #{folder.video_files.length} files:\n#{folder.video_files.map(&:full_path).join("\n")}"
             target_folder.create(:force => true)
             logger.info "Running command:\n#{command}"
-            exec(command)
+            system(command)
             logger.info "rsync done."
         end
 
@@ -47,8 +47,13 @@ module Peep
 
         def mark_as_imported_folder
           i = 1
-          i += 1 while source_folder["DCIM/peepimport#{i}"].exists?
-          source_folder["DCIM/peepimport#{i}"]
+
+          while i < 100
+            f = source_folder["DCIM/peepimport#{i}"]
+            return f if !f.exists?
+          end
+
+          return nil
         end
 
         def mark_as_imported

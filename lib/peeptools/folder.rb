@@ -10,7 +10,7 @@ module Peep
         end
 
         alias :[] :folder
-        
+
         def children_paths
             Dir.glob(::File.join(self.full_path, '*'))
         end
@@ -45,7 +45,7 @@ module Peep
 
         def remove opts = {}
             if opts[:force] == true
-                exec("rm -rf #{full_path}")
+                system("rm -rf #{full_path}")
             else
                Dir.rmdir(full_path)
             end
