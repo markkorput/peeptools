@@ -50,5 +50,11 @@ module Peep
           i += 1 while source_folder["DCIM/peepimport#{i}"].exists?
           source_folder["DCIM/peepimport#{i}"]
         end
+
+        def mark_as_imported
+          f = mark_as_imported_folder
+          f.create
+          source_folder['DCIM/100GOPRO'].files.each{|file| file.cd("../#{f.name}")}
+        end
     end
 end

@@ -10,7 +10,7 @@ CONFIG = {
   :volume_matcher => /peeppro/i,
   # :volume_matcher => /peep/i,
   :subfolder => File.join('DCIM','100GOPRO'),
-  # :subfolder => 'Peepshow-Generale/Data01/cam1', 
+  # :subfolder => 'Peepshow-Generale/Data01/cam1',
   :file_pattern => '*.MP4',
   :number_name_separator => '--',
   # :import_folder => './_IMPORT',
@@ -213,7 +213,7 @@ class Runner
 
     when 'import'
       folders = Peep::VolumeFinder.new(:logger => logger).folders
-      
+
       if folders.empty?
         logger.info 'No volumes found'
         return
@@ -231,7 +231,7 @@ class Runner
     when 'amounts'
 
       # Checker.new(:logger => logger).check_amounts
-      Peep::Importer.new(:logger => logger).imported_folders.each do |f|
+      Peep::Importer.new(:logger => logger).import_folder.folders.each do |f|
         logger.info "#{f.name}: #{f.files(:ext => 'MP4').length} mp4 file(s)"
       end
 
@@ -253,6 +253,3 @@ Runner.new(:argv => ARGV).run
 
 # puts "__FILE__: #{__FILE__.inspect}"
 # puts "ARGV: #{ARGV.inspect}"
-
-
-

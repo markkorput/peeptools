@@ -4,11 +4,11 @@ require 'peeptools/import_session'
 
 describe Peep::ImportSession do
     let(:path_import_folder_fixture){
-        File.expand_path('fixture/IMPORT', File.dirname(__FILE__))
+        File.expand_path('fixtures/IMPORT', File.dirname(__FILE__))
     }
 
     let(:path_volumes_folder_fixture){
-        File.expand_path('fixture/Volumes', File.dirname(__FILE__))
+        File.expand_path('fixtures/Volumes', File.dirname(__FILE__))
     }
 
     describe '.require_import_confirmation?' do
@@ -19,13 +19,10 @@ describe Peep::ImportSession do
         it 'can be configured through the :require_import_confirmation options' do
           expect(Peep::ImportSession.new(:require_import_confirmation => false).require_import_confirmation?).to eq false
           expect(Peep::ImportSession.new(:require_import_confirmation => true).require_import_confirmation?).to eq true
-          expect(Peep::ImportSession.new(:require_import_confirmation => 1).require_import_confirmation?).to eq false
-          expect(Peep::ImportSession.new(:require_import_confirmation => 'yes').require_import_confirmation?).to eq false
-          expect(Peep::ImportSession.new(:require_import_confirmation => :foo).require_import_confirmation?).to eq false
         end
     end
 
-    decribe '.request_import_confirmation' do
+    describe '.request_import_confirmation' do
         it 'prompts the user for confirmation'
     end
 
@@ -60,8 +57,8 @@ describe Peep::ImportSession do
         let(:import_session){
             Peep::ImportSession.new({
               :import_folder => import_folder.path,
-              :volmues_folder => volumes_folder.path,
-              :request_import_confirmation => false})
+              :volumes_folder => volumes_folder.path,
+              :require_import_confirmation => false})
         }
 
         it 'auto-imports mounted GoproFolder video content' do
@@ -69,7 +66,8 @@ describe Peep::ImportSession do
             expect(import_folder['GOPRO3'].exists?).to eq false
             expect(import_folder['GOPRO3'].files.map(&:name)).to eq []
             # execute
-            session.update
+            import_session.update
+
             # verify
             expect(import_folder['GOPRO3'].files.map(&:name)).to eq ['vid1.MP4', 'vid2.MP4', 'vid3.MP4']
             # restore
@@ -86,7 +84,7 @@ describe Peep::ImportSession do
           expect(volumes_folder['GOPRO3/DCIM/peepimport1'].exists?).to eq false
           expect(volumes_folder['GOPRO3/DCIM/100GOPRO'].files.map(&:name)).to eq ['vid1.MP4', 'vid2.MP4', 'vid3.MP4']
           # execute
-          session.update
+          import_session.update
           # verify
           expect(volumes_folder['GOPRO3/DCIM/peepimport1'].files.map(&:name)).to eq ['vid1.MP4', 'vid2.MP4', 'vid3.MP4']
           expect(volumes_folder['GOPRO3/DCIM/100GOPRO'].files.map(&:name)).to eq []
