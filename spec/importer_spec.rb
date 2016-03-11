@@ -79,14 +79,13 @@ describe Peep::Importer do
 
         it 'will increase the trailing digit in order to use a previously non-existing folder' do
             importer = Peep::Importer.new(fixture_source_path)
+            # default
             expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport1'].path
+            # create situation where 1 already exists
             importer.mark_as_imported_folder.create
             expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport2'].path
-            importer.mark_as_imported_folder.create
-            expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport3'].path
-            importer.source_folder['DCIM/peepimport1'].remove
-            expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport1'].path
-            importer.source_folder['DCIM/peepimport2'].remove
+            # cleanup
+            importer.mark_as_imported_folder.remove
         end
     end
 end

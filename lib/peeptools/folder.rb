@@ -39,8 +39,9 @@ module Peep
             end
 
             logger.info "Creating folder #{full_path}"
-            Dir.chdir(parent.full_path)
-            Dir.mkdir(name)
+            # Dir.chdir(parent.full_path)
+            # Dir.mkdir(name)
+            Dir.mkdir(self.path)
         end
 
         def remove opts = {}
