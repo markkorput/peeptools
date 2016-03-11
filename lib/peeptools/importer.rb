@@ -41,8 +41,14 @@ module Peep
             logger.info "rsync done."
         end
 
-        def imported_folders
-            import_folder.folders
+        # def imported_folders
+        #     import_folder.folders
+        # end
+
+        def mark_as_imported_folder
+          i = 1
+          i += 1 while source_folder["DCIM/peepimport#{i}"].exists?
+          source_folder["DCIM/peepimport#{i}"]
         end
     end
 end

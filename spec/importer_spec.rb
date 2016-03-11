@@ -57,19 +57,19 @@ describe Peep::Importer do
     #     end
     # end
 
-    describe '.imported_folders' do
-        let(:import_path){
-            ::File.expand_path('fixtures/_IMPORT', ::File.dirname(__FILE__))
-        }
-
-        let(:importer){
-            Peep::Importer.new(:import_folder => import_path)
-        }
-
-        it 'gives all folders in the import_folder' do
-            expect(importer.imported_folders.map(&:name)).to eq ['GOPRO3']
-        end
-    end
+    # describe '.imported_folders' do
+    #     let(:import_path){
+    #         ::File.expand_path('fixtures/IMPORT', ::File.dirname(__FILE__))
+    #     }
+    #
+    #     let(:importer){
+    #         Peep::Importer.new(:import_folder => import_path)
+    #     }
+    #
+    #     it 'gives all folders in the import_folder' do
+    #         expect(importer.imported_folders.map(&:name)).to eq ['GOPRO3']
+    #     end
+    # end
 
     # gives the folder inside the GoproFolder to which imported files will be moved
     describe '.mark_as_imported_folder' do
@@ -77,6 +77,16 @@ describe Peep::Importer do
             expect(Peep::Importer.new(fixture_source_path).mark_as_imported_folder.path).to eq File.join(fixture_source_path, 'DCIM', 'peepimport1')
         end
 
-        it 'will increase the trailing digit in order to use a previously non-existing folder'
+        it 'will increase the trailing digit in order to use a previously non-existing folder' do
+            importer = Peep::Importer.new(fixture_source_path)
+            expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport1'].path
+            importer.source_folder['DCIM/peepimport1'].create
+            expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport2'].path
+            importer.source_folder['DCIM/peepimport2'].create
+            expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport3'].path
+            importer.source_folder['DCIM/peepimport1'].remove
+            expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport1'].path
+            importer.source_folder['DCIM/peepimport2'].remove
+        end
     end
 end
