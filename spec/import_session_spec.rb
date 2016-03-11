@@ -94,6 +94,7 @@ describe Peep::ImportSession do
           volumes_folder['GOPRO3/DCIM/peepimport1'].files.each do |moved_file|
               moved_file.cd('../100GOPRO')
           end
+          volumes_folder['GOPRO3/DCIM/peepimport1'].remove
         end
 
         # it 'detects newly mounted GoPro volumes' do
