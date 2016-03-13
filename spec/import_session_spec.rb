@@ -116,4 +116,20 @@ describe Peep::ImportSession do
         #
         # end
     end
+
+    describe '.sound?' do
+      it 'defaults to true' do
+        expect(Peep::ImportSession.new.sound?).to eq true
+      end
+
+      it 'can be disabled using the :sound option' do
+        expect(Peep::ImportSession.new(:sound => false).sound?).to eq false
+      end
+    end
+
+    describe '.sound' do
+      it 'plays a sound' do
+        expect(Peep::ImportSession.new.respond_to?(:sound)).to eq true
+      end
+    end
 end

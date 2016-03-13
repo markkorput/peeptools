@@ -55,7 +55,16 @@ module Peep
         importer.import
         importer.mark_as_imported
         importer.eject if self.ejects?
+        self.sound(importer.source_folder.name) if self.sound?
       end
+    end
+
+    def sound?
+      options[:sound] != false
+    end
+
+    def sound(volume_name = nil)
+        system(volume_name ? "say import of \'#{volume_name}\' done" : 'say import done')
     end
   end
 end
