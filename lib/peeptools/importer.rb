@@ -51,6 +51,7 @@ module Peep
           while i < 100
             f = source_folder["DCIM/peepimport#{i}"]
             return f if !f.exists?
+            i += 1
           end
 
           return nil

@@ -85,7 +85,7 @@ describe Peep::Importer do
             importer.mark_as_imported_folder.create
             expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport2'].path
             # cleanup
-            importer.mark_as_imported_folder.remove
+            importer.source_folder['DCIM/peepimport1'].remove
         end
     end
 end
