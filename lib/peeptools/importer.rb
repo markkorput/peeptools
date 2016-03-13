@@ -62,5 +62,13 @@ module Peep
           f.create
           source_folder['DCIM/100GOPRO'].files.each{|file| file.cd("../#{f.name}")}
         end
+
+        def eject_drive
+        end
+
+        def eject
+          logger.warn 'TODO; implement eject command'
+          # systme("diskutil eject #{eject_drive}")
+        end
     end
 end

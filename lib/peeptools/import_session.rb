@@ -24,6 +24,10 @@ module Peep
       return value == 'y' || value == 'yes'
     end
 
+    def ejects?
+      options[:eject] != false
+    end
+
     def volume_finder
       @volume_finder_cache ||= VolumeFinder.new(:volumes_folder => options[:volumes_folder], :logger => logger)
     end
@@ -33,7 +37,6 @@ module Peep
     end
 
     def update
-
       # get all GoPro volumes we can find
       volume_finder.folders.each do |folder|
         # Create an importer for the GoPro folder
@@ -51,6 +54,7 @@ module Peep
         # perform import
         importer.import
         importer.mark_as_imported
+        importer.eject if self.ejects?
       end
     end
   end

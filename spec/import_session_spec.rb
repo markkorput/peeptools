@@ -26,6 +26,16 @@ describe Peep::ImportSession do
         it 'prompts the user for confirmation'
     end
 
+    describe '.ejects?' do
+      it 'is true by default' do
+        expect(Peep::ImportSession.new.ejects?).to eq true
+      end
+
+      it 'can be set to false through the :eject option' do
+        expect(Peep::ImportSession.new(:eject => false).ejects?).to eq false
+      end
+    end
+
     describe '.volume_finder' do
         it 'gives a VolumeFinder instance' do
             expect(Peep::ImportSession.new.volume_finder.class).to eq Peep::VolumeFinder

@@ -88,4 +88,8 @@ describe Peep::Importer do
             importer.source_folder['DCIM/peepimport1'].remove
         end
     end
+
+    describe '.eject' do
+      it 'runs an eject command'
+    end
 end
