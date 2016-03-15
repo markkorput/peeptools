@@ -20,6 +20,8 @@ module Peep
     end
 
     def request_import_confirmation
+      logger.warn "ImportSession.request_import_confirmation not implemented yet; can't ask for confirmation"
+      return true
       value = gets.to_s.downcase
       return value == 'y' || value == 'yes'
     end
