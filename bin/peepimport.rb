@@ -5,6 +5,7 @@ require 'FileUtils'
 require 'logger'
 require 'peeptools/volume_finder'
 require 'peeptools/importer'
+require 'peeptools/import_session'
 
 CONFIG = {
   :volume_matcher => /peeppro/i,
@@ -243,8 +244,19 @@ class Runner
       Cleaner.new(:logger => logger).clean
     when 'unindex'
       Cleaner.new(:logger => logger).unindex
+    when 'auto'
+      # require_import_confirmation
+      session = Peep::ImportSession.new({
+        :logger => logger,
+        :require_import_confirmation => true,
+      })
+
+      while true # loop until user aborts with ctrl-c
+        session.update
+        sleep 3 # wait 3 seconds
+      end
     else
-      puts "USAGE: #{File.basename(__FILE__)} volume|import|check|amounts|sizes|organise|clean|unindex"
+      puts "USAGE: #{File.basename(__FILE__)} volume|import|check|amounts|sizes|organise|clean|unindex|auto"
     end
   end
 end

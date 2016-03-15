@@ -58,17 +58,15 @@ module Peep
         end
 
         def mark_as_imported
+          logger.info "Marking as read; moving GoPro volume files into #{mark_as_imported_folder.full_path}"
           f = mark_as_imported_folder
           f.create
           source_folder['DCIM/100GOPRO'].files.each{|file| file.cd("../#{f.name}")}
         end
 
-        def eject_drive
-        end
-
         def eject
-          logger.warn 'TODO; implement eject command'
-          # systme("diskutil eject #{eject_drive}")
+          logger.info "Ejecting #{source_folder.name}"
+          system("diskutil eject #{source_folder.name}")
         end
     end
 end
