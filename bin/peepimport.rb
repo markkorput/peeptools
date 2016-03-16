@@ -5,12 +5,13 @@ require 'FileUtils'
 require 'logger'
 require 'peeptools/volume_finder'
 require 'peeptools/importer'
+require 'peeptools/import_session'
 
 CONFIG = {
   :volume_matcher => /peeppro/i,
   # :volume_matcher => /peep/i,
   :subfolder => File.join('DCIM','100GOPRO'),
-  # :subfolder => 'Peepshow-Generale/Data01/cam1', 
+  # :subfolder => 'Peepshow-Generale/Data01/cam1',
   :file_pattern => '*.MP4',
   :number_name_separator => '--',
   # :import_folder => './_IMPORT',
@@ -82,7 +83,7 @@ class Organiser
       logger.info "Populating take folder: #{take_folder}"
       logger.info "Cam fs: #{cam_folders.inspect}"
       cam_folders.each_with_index do |cam_folder, idx|
-        cam_no_part = (File.basename(cam_folder).match(/(\d+)/) || [])[1] || "IDX#{idx}"
+        cam_no_part = (File.basename(cam_folder).match(/(\d+)$/) || [])[1] || (File.basename(cam_folder).match(/(\d+)/) || [])[1] || "IDX#{idx}"
         cam_file = Dir.glob(File.join(cam_folder, '*')).sort{|a,b| a.downcase <=> b.downcase}.first
         dest_name = "cam#{cam_no_part}#{CONFIG[:number_name_separator]}#{File.basename(cam_file)}"
         dest_path = File.join(take_folder, dest_name)
@@ -213,7 +214,7 @@ class Runner
 
     when 'import'
       folders = Peep::VolumeFinder.new(:logger => logger).folders
-      
+
       if folders.empty?
         logger.info 'No volumes found'
         return
@@ -227,8 +228,14 @@ class Runner
 
     when 'check'
       Checker.new(:logger => logger).check_hashes
+
     when 'amounts'
-      Checker.new(:logger => logger).check_amounts
+
+      # Checker.new(:logger => logger).check_amounts
+      Peep::Importer.new(:logger => logger).import_folder.folders.each do |f|
+        logger.info "#{f.name}: #{f.files(:ext => 'MP4').length} mp4 file(s)"
+      end
+
     when 'sizes'
       Checker.new(:logger => logger).check_size
     when 'organise'
@@ -237,8 +244,19 @@ class Runner
       Cleaner.new(:logger => logger).clean
     when 'unindex'
       Cleaner.new(:logger => logger).unindex
+    when 'auto'
+      # require_import_confirmation
+      session = Peep::ImportSession.new({
+        :logger => logger,
+        :require_import_confirmation => true,
+      })
+
+      while true # loop until user aborts with ctrl-c
+        session.update
+        sleep 3 # wait 3 seconds
+      end
     else
-      puts "USAGE: #{File.basename(__FILE__)} volume|import|check|amounts|sizes|organise|clean|unindex"
+      puts "USAGE: #{File.basename(__FILE__)} volume|import|check|amounts|sizes|organise|clean|unindex|auto"
     end
   end
 end
@@ -247,6 +265,3 @@ Runner.new(:argv => ARGV).run
 
 # puts "__FILE__: #{__FILE__.inspect}"
 # puts "ARGV: #{ARGV.inspect}"
-
-
-

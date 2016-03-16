@@ -3,17 +3,21 @@ require File.dirname(__FILE__) + '/spec_helper'
 require 'peeptools/importer'
 
 describe Peep::Importer do
-    let(:fixture_path){
-        ::File.expand_path('fixtures/GOPRO3', ::File.dirname(__FILE__))
+    let(:fixture_source_path){
+        ::File.expand_path('fixtures/Volumes/GOPRO3', ::File.dirname(__FILE__))
     }
 
     let(:importer){
-        Peep::Importer.new(fixture_path)
+        Peep::Importer.new(fixture_source_path)
     }
 
     describe '.import_folder' do
         it 'defaults to the _IMPORT folder in the current working directory' do
             expect(Peep::Importer.new.import_folder.full_path).to eq ::File.join(Dir.pwd, '_IMPORT')
+        end
+
+        it 'can be configured through the :import_folder option' do
+            expect(Peep::Importer.new(:import_folder => '/tmp/_imprt').import_folder.full_path).to eq '/tmp/_imprt'
         end
     end
 
@@ -22,13 +26,26 @@ describe Peep::Importer do
             expect(importer.target_folder.full_path).to eq ::File.join(Dir.pwd, '_IMPORT', 'GOPRO3')
         end
     end
-    
+
     describe '.source_folder' do
-        it 'gives the specified folder' do
-            expect(importer.source_folder.path).to eq fixture_path
+        it 'gives a GoproFolder instance' do
+            expect(importer.source_folder.class).to eq Peep::GoproFolder
+        end
+
+        it 'can be configured through the main initializer param' do
+            expect(Peep::Importer.new('/aa/bb/c').source_folder.path).to eq '/aa/bb/c'
+        end
+
+        it 'can be configured through :folder option' do
+            expect(Peep::Importer.new(:folder => '/some/path').source_folder.path).to eq '/some/path'
+            expect(Peep::Importer.new(:folder => Peep::GoproFolder.new('/some/other/path')).source_folder.path).to eq '/some/other/path'
+        end
+
+        it 'defaults to nil' do
+            expect(Peep::Importer.new.source_folder).to eq nil
         end
     end
-    
+
     # describe '.import' do
     #     it "should import the video files" do
     #         expect(importer.import_folder.exists?).to eq false
@@ -39,4 +56,40 @@ describe Peep::Importer do
     #         importer.import_folder.remove(:force => true)
     #     end
     # end
+
+    # describe '.imported_folders' do
+    #     let(:import_path){
+    #         ::File.expand_path('fixtures/IMPORT', ::File.dirname(__FILE__))
+    #     }
+    #
+    #     let(:importer){
+    #         Peep::Importer.new(:import_folder => import_path)
+    #     }
+    #
+    #     it 'gives all folders in the import_folder' do
+    #         expect(importer.imported_folders.map(&:name)).to eq ['GOPRO3']
+    #     end
+    # end
+
+    # gives the folder inside the GoproFolder to which imported files will be moved
+    describe '.mark_as_imported_folder' do
+        it 'defaults to the DCIM/peepimport1 subfolder inside the GoproFolder' do
+            expect(Peep::Importer.new(fixture_source_path).mark_as_imported_folder.path).to eq File.join(fixture_source_path, 'DCIM', 'peepimport1')
+        end
+
+        it 'will increase the trailing digit in order to use a previously non-existing folder' do
+            importer = Peep::Importer.new(fixture_source_path)
+            # default
+            expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport1'].path
+            # create situation where 1 already exists
+            importer.mark_as_imported_folder.create
+            expect(importer.mark_as_imported_folder.path).to eq importer.source_folder['DCIM/peepimport2'].path
+            # cleanup
+            importer.source_folder['DCIM/peepimport1'].remove
+        end
+    end
+
+    describe '.eject' do
+      it 'runs an eject command'
+    end
 end

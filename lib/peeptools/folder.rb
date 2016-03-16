@@ -10,13 +10,19 @@ module Peep
         end
 
         alias :[] :folder
-        
+
         def children_paths
             Dir.glob(::File.join(self.full_path, '*'))
         end
 
         def folders
             children_paths.select{|p| ::File.directory?(p)}.map{|p| self.class.new(p)}
+        end
+
+        def files _opts = {}
+            files = children_paths.select{|p| ::File.file?(p)}.map{|p| File.new(p)}
+            files = files.select{|f| f.extension == ".#{_opts[:ext]}"} if _opts[:ext]
+            return files
         end
 
         def create opts = {}
@@ -33,13 +39,14 @@ module Peep
             end
 
             logger.info "Creating folder #{full_path}"
-            Dir.chdir(parent.full_path)
-            Dir.mkdir(name)
+            # Dir.chdir(parent.full_path)
+            # Dir.mkdir(name)
+            Dir.mkdir(self.path)
         end
 
         def remove opts = {}
             if opts[:force] == true
-                exec("rm -rf #{full_path}")
+                system("rm -rf #{full_path}")
             else
                Dir.rmdir(full_path)
             end
